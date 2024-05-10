@@ -6,17 +6,21 @@
 */
 
 #include <stddef.h>
+#include <sys/time.h>
+#include <time.h>
 #include "thread.h"
 
 static thread_error_t thread_prepare_clock(struct timespec *timeout, long sec,
     long nsec)
 {
+    struct timeval timeval = { 0 };
+
     if (0 > sec || 0 > nsec)
         return THREAD_SLEEP_INVALID_VALUES;
-    if (-1 == clock_gettime(CLOCK_REALTIME, timeout))
+    if (0 != gettimeofday(&timeval, NULL))
         return THREAD_SLEEP_CLOCK_GETTIME_FAILED;
-    timeout->tv_sec += sec;
-    timeout->tv_nsec += nsec;
+    timeout->tv_sec = timeval.tv_sec + sec;
+    timeout->tv_nsec = timeval.tv_usec * 1000 + nsec;
     return THREAD_NO_ERROR;
 }
 
