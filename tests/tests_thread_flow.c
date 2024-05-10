@@ -12,7 +12,7 @@
 
 static void *thread_function(thread_arg_t *arg)
 {
-    printf("Thread's address: %p\n", arg->this);
+    printf("Thread's address: %p\n", arg->this_thread);
     printf("Argument's address: %p\n", arg->arg);
     return arg->arg;
 }
@@ -25,9 +25,9 @@ Test(thread_flow, test_impl)
     cr_assert(eq(int, THREAD_NO_ERROR, thread_init(&thread)));
     cr_assert(eq(int, THREAD_NO_ERROR,
         thread_start(&thread, thread_function, (void *) &thread)));
-    cr_assert(eq(int, THREAD_RUNNING, thread.status));
+    cr_assert(eq(int, THREAD_RUNNING, thread._status));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_join(&thread, &ret_val)));
-    cr_assert(eq(int, THREAD_DEAD, thread.status));
+    cr_assert(eq(int, THREAD_DEAD, thread._status));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_destroy(&thread)));
     cr_assert(eq(ptr, ret_val, &thread));
 }

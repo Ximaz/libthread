@@ -6,7 +6,6 @@
 */
 
 #include <stdio.h>
-#include <limits.h>
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 #include "thread.h"
@@ -27,9 +26,9 @@ Test(thread_cancel, test_impl)
     cr_assert(eq(int, THREAD_NO_ERROR, thread_init(&thread)));
     cr_assert(eq(int, THREAD_NO_ERROR,
         thread_start(&thread, thread_function, (void *) &thread)));
-    cr_assert(eq(int, THREAD_RUNNING, thread.status));
+    cr_assert(eq(int, THREAD_RUNNING, thread._status));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_cancel(&thread)));
-    cr_assert(eq(int, THREAD_DEAD, thread.status));
+    cr_assert(eq(int, THREAD_DEAD, thread._status));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_destroy(&thread)));
 }
 

@@ -11,12 +11,14 @@
 NO_DISCARD thread_error_t thread_start(thread_t *this, thread_function_t func,
     void *arg)
 {
+    thread_error_t err = THREAD_NO_ERROR;
+
     if (NULL == this)
         return THREAD_INVALID_PTR;
-    this->arg.arg = arg;
+    this->_arg.arg = arg;
     if (0 != pthread_create(&(this->_thread), NULL,
-        (void *(*)(void *)) func, (void *) &this->arg))
-        return THREAD_START_FAILED;
-    this->status = THREAD_RUNNING;
-    return THREAD_NO_ERROR;
+        (void *(*)(void *)) func, (void *) &(this->_arg)))
+        err = THREAD_START_FAILED;
+    this->_status = THREAD_RUNNING;
+    return err;
 }
