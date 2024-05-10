@@ -12,7 +12,7 @@ NO_DISCARD thread_error_t thread_cancel(thread_t *this)
 {
     if (NULL == this)
         return THREAD_INVALID_PTR;
-    if (0 != pthread_cancel(this->_thread))
+    if (THREAD_RUNNING != this->status || 0 != pthread_cancel(this->_thread))
         return THREAD_CANCEL_FAILED;
     this->status = THREAD_DEAD;
     return THREAD_NO_ERROR;
