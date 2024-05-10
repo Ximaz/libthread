@@ -26,9 +26,9 @@ typedef enum e_thread_error {
 } thread_error_t;
 
 typedef enum e_thread_status {
+    THREAD_DEAD,
     THREAD_RUNNING,
-    THREAD_SLEEPING,
-    THREAD_DEAD
+    THREAD_SLEEPING
 } thread_status_t;
 
 struct s_thread;
