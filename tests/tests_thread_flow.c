@@ -5,15 +5,12 @@
 ** tests_thread_flow.c
 */
 
-#include <stdio.h>
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 #include "thread.h"
 
 static void *thread_function(thread_arg_t *arg)
 {
-    printf("Thread's address: %p\n", arg->this_thread);
-    printf("Argument's address: %p\n", arg->arg);
     return arg->arg;
 }
 

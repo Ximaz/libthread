@@ -12,7 +12,32 @@ env:
     SSH_PRIVATE_KEY_PASSPHRASE: "${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}"
 
 jobs:
+    coding-style:
+        runs-on: "ubuntu-latest"
+        container:
+            image: "ghcr.io/epitech/coding-style-checker:latest"
+        steps:
+            -   name: "Check coding style"
+                run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
+
+            -   name: "Annotate coding-style errors"
+                run: |
+                    status=0
+                    while IFS= read -r line; do
+                        file=$(echo "${line}" | cut -d ':' -f1)
+                        pos=$(echo "${line}" | cut -d ':' -f2)
+                        type=$(echo "${line}" | cut -d ':' -f3)
+                        csid=$(echo "${line}" | cut -d ':' -f4)
+
+                        [[ "${type:1}" == "illegal"* ]] && continue
+                        echo "::error file=${file},line=${pos},title=${type:1} ${csid}::${type:1}: ${csid} at ${file}:${pos}"
+                        status=1
+                    done < coding-style-reports.log
+                    exit "${status}"
+
     check-basics:
+        needs:
+            -   "coding-style"
         runs-on: "ubuntu-latest"
         outputs:
             continue: "${{ steps.basic-check.outputs.continue }}"
@@ -94,33 +119,9 @@ jobs:
             -   name: "Clean up"
                 run: "make fclean"
 
-    coding-style:
-        runs-on: "ubuntu-latest"
-        container:
-            image: "ghcr.io/epitech/coding-style-checker:latest"
-        steps:
-            -   name: "Check coding style"
-                run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
-
-            -   name: "Annotate coding-style errors"
-                run: |
-                    status=0
-                    while IFS= read -r line; do
-                        file=$(echo "${line}" | cut -d ':' -f1)
-                        pos=$(echo "${line}" | cut -d ':' -f2)
-                        type=$(echo "${line}" | cut -d ':' -f3)
-                        csid=$(echo "${line}" | cut -d ':' -f4)
-
-                        [[ "${type:1}" == "illegal"* ]] && continue
-                        echo "::error file=${file},line=${pos},title=${type:1} ${csid}::${type:1}: ${csid} at ${file}:${pos}"
-                        status=1
-                    done < coding-style-reports.log
-                    exit "${status}"
-
     run-tests:
         needs:
             -   "basics"
-            -   "coding-style"
         runs-on: "ubuntu-latest"
         container:
             image: "epitechcontent/epitest-docker:latest"
