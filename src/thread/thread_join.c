@@ -8,7 +8,7 @@
 #include <stddef.h>
 #include "thread.h"
 
-NO_DISCARD thread_error_t thread_join(thread_t *this, void **ret_val)
+thread_error_t thread_join(thread_t *this, void **ret_val)
 {
     if (0 != pthread_join(this->_thread, ret_val))
         return THREAD_JOIN_FAILED;

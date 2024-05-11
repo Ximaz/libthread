@@ -8,8 +8,7 @@
 #include <stddef.h>
 #include "thread.h"
 
-NO_DISCARD thread_error_t thread_start(thread_t *this, thread_function_t func,
-    void *arg)
+thread_error_t thread_start(thread_t *this, thread_task_t func, void *arg)
 {
     thread_error_t err = THREAD_NO_ERROR;
 

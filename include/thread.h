@@ -8,7 +8,6 @@
 #ifndef __THREAD_H_
     #define __THREAD_H_
     #include <pthread.h>
-    #define NO_DISCARD __attribute__((warn_unused_result))
 
 typedef enum e_thread_error {
     THREAD_NO_ERROR,
@@ -41,7 +40,7 @@ typedef struct s_thread_arg {
     void *arg;
 } thread_arg_t;
 
-typedef void *(*thread_function_t)(thread_arg_t *arg);
+typedef void *(*thread_task_t)(thread_arg_t *arg);
 
 typedef struct s_thread {
     thread_status_t _status;
@@ -51,16 +50,15 @@ typedef struct s_thread {
     pthread_t _thread;
 } thread_t;
 
-NO_DISCARD thread_error_t thread_init(thread_t *this);
+thread_error_t thread_init(thread_t *this);
 
 thread_error_t thread_destroy(thread_t *this);
 
-NO_DISCARD thread_error_t thread_cancel(thread_t *this);
+thread_error_t thread_cancel(thread_t *this);
 
-NO_DISCARD thread_error_t thread_start(thread_t *this, thread_function_t func,
-    void *arg);
+thread_error_t thread_start(thread_t *this, thread_task_t func, void *arg);
 
-NO_DISCARD thread_error_t thread_join(thread_t *this, void **ret_val);
+thread_error_t thread_join(thread_t *this, void **ret_val);
 
 thread_error_t thread_sleep(thread_t *this, long sec, long nsec);
 

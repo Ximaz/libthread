@@ -13,7 +13,7 @@
 
 static struct timeval before = { 0, 0 };
 static struct timeval after = { 0, 0 };
-static const long sec = 5;
+static const long sec = 3;
 
 static void *thread_function(thread_arg_t *arg)
 {
@@ -21,7 +21,7 @@ static void *thread_function(thread_arg_t *arg)
     thread_sleep(arg->this_thread, sec, 0);
     gettimeofday(&after, NULL);
     cr_assert(eq(long, sec, after.tv_sec - before.tv_sec));
-    return NULL;
+    return arg->arg;
 }
 
 Test(thread_sleep, test_impl)
@@ -31,10 +31,10 @@ Test(thread_sleep, test_impl)
 
     cr_assert(eq(int, THREAD_NO_ERROR, thread_init(&thread)));
     cr_assert(eq(int, THREAD_NO_ERROR,
-        thread_start(&thread, thread_function, NULL)));
+        thread_start(&thread, thread_function, (void *) &thread)));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_join(&thread, &ret_val)));
     cr_assert(eq(int, THREAD_NO_ERROR, thread_destroy(&thread)));
-    cr_assert(eq(ptr, ret_val, NULL));
+    cr_assert(eq(ptr, ret_val, &thread));
 }
 
 Test(thread_sleep, test_err)
