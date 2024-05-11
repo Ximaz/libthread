@@ -20,11 +20,11 @@ jobs:
             -   name: "Checkout"
                 uses: "actions/checkout@v4.1.1"
 
-            -   name: "Check coding style"
-                run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
-
             -   name: "Temporary files"
                 run: "[[ $(find . -type f \\( -name '*.o' -o -name '*.log' -o -name '.env' -o -name '*.so' -o -name '*.a' -o -name '*.gcno' -o -name '*.gcda' \\)) == \"\" ]] && exit 0 || exit 1"
+
+            -   name: "Check coding style"
+                run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
 
             -   name: "Annotate coding-style errors"
                 run: |
