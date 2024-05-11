@@ -16,8 +16,8 @@ thread_pool_error_t thread_pool_run(thread_pool_t *this)
     if (NULL == this)
         return THREAD_POOL_INVALID_PTR;
     while (0 == tasks_queue_is_empty(this->_tasks)) {
-        for (i = 0; i < this->_pool_size && 0 == tasks_queue_is_empty(this->_tasks);
-            ++i)
+        for (i = 0; i < this->_pool_size &&
+            0 == tasks_queue_is_empty(this->_tasks); ++i)
             thread_start(&(this->_threads[i]), tasks_queue_pop(this->_tasks),
                 NULL);
         for (j = 0; j < i; ++j)
