@@ -17,8 +17,14 @@ jobs:
         container:
             image: "ghcr.io/epitech/coding-style-checker:latest"
         steps:
+            -   name: "Checkout"
+                uses: "actions/checkout@v4.1.1"
+
             -   name: "Check coding style"
                 run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
+
+            -   name: "Temporary files"
+                run: "[[ $(find . -type f \\( -name '*.o' -o -name '*.log' -o -name '.env' -o -name '*.so' -o -name '*.a' -o -name '*.gcno' -o -name '*.gcda' \\)) == \"\" ]] && exit 0 || exit 1"
 
             -   name: "Annotate coding-style errors"
                 run: |
@@ -57,11 +63,6 @@ jobs:
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v4.1.1"
-                with:
-                    fetch-depth: 0
-
-            -   name: "Temporary files"
-                run: "[[ $(find . -type f \\( -name '*.o' -o -name '*.log' -o -name '.env' -o -name '*.so' -o -name '*.a' -o -name '*.gcno' -o -name '*.gcda' \\)) == \"\" ]] && exit 0 || exit 1"
 
             -   name: "Checking for the artifacts before compilation"
                 run: "for a in ${{ env.ARTIFACTS }} ; do [ ! -f \"${a}\" ]; done"
